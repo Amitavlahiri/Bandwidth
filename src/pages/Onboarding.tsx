@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, animate } from 'framer-motion';
 import { useBandwidth } from '@/context/BandwidthContext';
 import FloatingShapes from '@/components/FloatingShapes';
 import PageTransition from '@/components/PageTransition';
 import Translate from '@/components/Translate';
-import { Brain, Target, Clock, Zap, Shield, Sparkles, ArrowRight } from 'lucide-react';
+import { Brain, Target, Clock, Zap, Shield, Sparkles, ArrowRight, Users } from 'lucide-react';
 
 const options = [
   { id: 'stress', label: 'Reduce stress', icon: Brain },
@@ -15,6 +15,43 @@ const options = [
   { id: 'pressure', label: 'Handle pressure better', icon: Shield },
   { id: 'other', label: 'Something else', icon: Sparkles },
 ];
+
+const USER_COUNT = 8000;
+
+const UserCount = () => {
+  const [count, setCount] = useState(0);
+  const done = count >= USER_COUNT;
+
+  useEffect(() => {
+    const controls = animate(0, USER_COUNT, {
+      duration: 2,
+      delay: 0.6,
+      ease: 'easeOut',
+      onUpdate: v => setCount(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.6 }}
+      className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground"
+    >
+      <Users className="w-4 h-4 text-primary" />
+      <motion.span
+        key={done ? 'done' : 'counting'}
+        initial={done ? { scale: 1.25 } : false}
+        animate={{ scale: 1 }}
+        className="font-bold text-foreground tabular-nums"
+      >
+        {done ? '8K+' : count.toLocaleString()}
+      </motion.span>
+      <Translate>users already on Bandwidth</Translate>
+    </motion.div>
+  );
+};
 
 const Onboarding = () => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -129,6 +166,8 @@ const Onboarding = () => {
               <ArrowRight className="w-4 h-4" />
             </button>
           </motion.div>
+
+          <UserCount />
         </div>
       </div>
     </PageTransition>
