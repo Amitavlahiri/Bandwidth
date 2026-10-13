@@ -16,7 +16,7 @@ const options = [
   { id: 'other', label: 'Something else', icon: Sparkles },
 ];
 
-const USER_COUNT = 8000;
+const USER_COUNT = 7700;
 
 const UserCount = () => {
   const [count, setCount] = useState(0);
@@ -25,7 +25,7 @@ const UserCount = () => {
   useEffect(() => {
     const controls = animate(0, USER_COUNT, {
       duration: 2,
-      delay: 0.6,
+      delay: 0.4,
       ease: 'easeOut',
       onUpdate: v => setCount(Math.round(v)),
     });
@@ -36,19 +36,21 @@ const UserCount = () => {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6 }}
-      className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground"
+      transition={{ delay: 0.4 }}
+      className="mt-8 flex items-center justify-center gap-3 px-5 py-4 rounded-md border border-primary/20 bg-primary/5"
     >
-      <Users className="w-4 h-4 text-primary" />
+      <Users className="w-6 h-6 text-primary shrink-0" />
       <motion.span
         key={done ? 'done' : 'counting'}
-        initial={done ? { scale: 1.25 } : false}
+        initial={done ? { scale: 1.2 } : false}
         animate={{ scale: 1 }}
-        className="font-bold text-foreground tabular-nums"
+        className="text-3xl font-bold text-primary tabular-nums"
       >
-        {done ? '8K+' : count.toLocaleString()}
+        {count.toLocaleString()}{done && '+'}
       </motion.span>
-      <Translate>users already on Bandwidth</Translate>
+      <span className="text-sm font-medium text-foreground">
+        <Translate>users already on Bandwidth</Translate>
+      </span>
     </motion.div>
   );
 };
